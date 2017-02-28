@@ -1,18 +1,22 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain
 {
     public class DataEventRecord
     {
+        public DataEventRecord()
+        {
+            Id = Guid.NewGuid();
+        }
+
         [Key]
-        public long DataEventRecordId { get; set; }
+        public Guid Id { get; private set; }
+
         public string Name { get; set; }
+
         public string Description { get; set; }
-        public DateTime Timestamp { get; set; }
-        [ForeignKey("SourceInfoId")]
-        public SourceInfo SourceInfo { get; set; }
-        public long SourceInfoId { get; set; }
+
+        public SourceInfo SourceInfo { get; private set; }
     }
 }

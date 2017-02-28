@@ -14,16 +14,24 @@ namespace Domain.Infrastructure.Test
             optionsBuilder.UseNpgsql("User ID=postgres;Password=pass1;Host=localhost;Port=5432;Database=test;Pooling=true;");
             using (var dbContext = new DomainContext(optionsBuilder.Options))
             {
-                var sourceInfos = dbContext.SourceInfos.ToList();
-                Debug.WriteLine($@"Source Infos: {sourceInfos.Count}");
+                //var sourceInfoTemp = dbContext.SourceInfos.Include(x => x.DataEventRecords).First();
+                //Assert.NotEmpty(sourceInfoTemp.DataEventRecords);
+                var sourceInfos = dbContext.SourceInfos
+                    .Include(s => s.DataEventRecords)
+                    .ToList();
+                var dataEventRecords = dbContext.DataEventRecords.ToList();
+                var dataEventRecord = new DataEventRecord
+                {
+                    Name = "GWDER",
+                };
                 var sourceInfo = new SourceInfo
                 {
                     Name = "Gazeta Wyborcza",
                 };
-                dbContext.Add(sourceInfo);
+                sourceInfo.AddDataEventRecord(dataEventRecord);
+                dbContext.SourceInfos.Add(sourceInfo);
+                //dbContext.DataEventRecords.Add(dataEventRecord);
                 dbContext.SaveChanges();
-
-                Assert.False(false);
             }
         }
     }

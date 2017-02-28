@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Domain.Migrator.Migrations
 {
@@ -13,39 +12,35 @@ namespace Domain.Migrator.Migrations
                 name: "SourceInfos",
                 columns: table => new
                 {
-                    SourceInfoId = table.Column<long>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    Id = table.Column<Guid>(nullable: false),
                     Description = table.Column<string>(nullable: true),
                     Name = table.Column<string>(nullable: true),
-                    Timestamp = table.Column<DateTime>(nullable: false),
                     UpdatedTimestamp = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SourceInfos", x => x.SourceInfoId);
+                    table.PrimaryKey("PK_SourceInfos", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "DataEventRecords",
                 columns: table => new
                 {
-                    DataEventRecordId = table.Column<long>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    Id = table.Column<Guid>(nullable: false),
                     Description = table.Column<string>(nullable: true),
                     Name = table.Column<string>(nullable: true),
-                    SourceInfoId = table.Column<long>(nullable: false),
-                    Timestamp = table.Column<DateTime>(nullable: false),
+                    SourceInfoId = table.Column<Guid>(nullable: true),
                     UpdatedTimestamp = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DataEventRecords", x => x.DataEventRecordId);
+                    table.PrimaryKey("PK_DataEventRecords", x => x.Id);
                     table.ForeignKey(
                         name: "FK_DataEventRecords_SourceInfos_SourceInfoId",
                         column: x => x.SourceInfoId,
                         principalTable: "SourceInfos",
-                        principalColumn: "SourceInfoId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(

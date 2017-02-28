@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Domain.Infrastructure
 {
@@ -16,8 +17,16 @@ namespace Domain.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<DataEventRecord>().HasKey(m => m.DataEventRecordId);
-            builder.Entity<SourceInfo>().HasKey(m => m.SourceInfoId);
+            builder.Entity<SourceInfo>()
+                .HasMany(s => s.DataEventRecords)
+                .WithOne(d => d.SourceInfo);
+
+            var navigation = builder.Entity<SourceInfo>()
+                .Metadata.FindNavigation(nameof(SourceInfo.DataEventRecords));
+            navigation.SetPropertyAccessMode(PropertyAccessMode.Field);
+
+            builder.Entity<DataEventRecord>().HasKey(m => m.Id);
+            builder.Entity<SourceInfo>().HasKey(m => m.Id);
 
             // shadow properties
             builder.Entity<DataEventRecord>().Property<DateTime>("UpdatedTimestamp");
