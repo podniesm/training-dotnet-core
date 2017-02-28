@@ -18,7 +18,7 @@ namespace Domain.Inetgration.Test
                 Debug.WriteLine($@"Source Infos: {soucreInfos.Count}");
                 var sourceInfo = new SourceInfo
                 {
-                    Name = "Gazera Wyborcza",
+                    Name = "Gazeta Wyborcza",
                 };
                 dbContext.Add(sourceInfo);
                 dbContext.SaveChanges();
